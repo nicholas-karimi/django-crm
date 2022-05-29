@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% if title %}
+    <title>CRM Pro - {{ title }}</title>
+    {% else %}
+    <title>CRM Pro</title>
+    {% endif %}
+
+    <style>
+      .lead {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 6px;
+        padding-right: 6px;
+        margin-top: 10px;
+        background-color: #f6f6f6f;
+        width: 100%%;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Welcome to CRMPro</h2>
+    {% for lead in leads %}
+
+    <div class="lead">
+      <a href="{% url 'leads:lead' lead.id %}">{{lead}}</a>
+    </div>
+    {% endfor %}
+  </body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% if title %}
+    <title>CRM Pro - {{ title }}</title>
+    {% else %}
+    <title>CRM Pro</title>
+    {% endif %}
+
+    <style>
+      .lead {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 6px;
+        padding-right: 6px;
+        margin-top: 10px;
+        background-color: #f6f6f6f;
+        width: 100%%;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Lead name: {{lead.first_name}}</h2>
+    {% comment %} {% for lead in leads %}
+    <div class="lead">{{lead.last_name}}</div>
+    {% endfor %} {% endcomment %}
+  </body>
+</html>
