@@ -4,6 +4,9 @@ from django.contrib import messages
 from .models import Lead, Agent
 from .forms import LeadForm, LeadModelForm
 
+def index(request):
+    return render(request, 'landing.html')
+
 def leads_list(request):
     leads = Lead.objects.all()
 
