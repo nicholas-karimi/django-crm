@@ -1,23 +1,50 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from pipes import Template
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib import messages 
+from django.views.generic import (TemplateView, UpdateView, 
+                                    CreateView ,ListView, DetailView, DeleteView)
 
 from .models import Lead, Agent
 from .forms import LeadForm, LeadModelForm
 
+
+# clas based views 
+#CRUD+L -> Create, Retrieve, Update, and Delete + List
+
+class IndexPageList(TemplateView):
+    template_name = 'landing.html'
+
 def index(request):
     return render(request, 'landing.html')
+
+class LeadListView(ListView):
+    template_name = 'leads/leads_list.html'
+    queryset = Lead.objects.all()
+    context_object_name = 'leads' #-> customize context instad of 
+                                        #using default object_list provided by the ListView()
 
 def leads_list(request):
     leads = Lead.objects.all()
 
     return render(request, 'leads/leads_list.html', {'title': 'Home', "leads": leads})
 
+class leadDetailView(DetailView):
+    template_name = 'leads/lead_detail.html'
+    queryset = Lead.objects.all()
+    context_object_name = 'lead'
 
 def lead_detail(request, pk):
     lead = get_object_or_404(Lead, id=pk)
     return render(request, 'leads/lead_detail.html',
                              {'title': 'Lead Detail', 'lead': lead})
 
+
+class LeadCreateView(CreateView):
+    template_name = 'leads/lead_create.html'
+    form_class = LeadModelForm
+
+    def get_success_url(self) -> str:
+        return reverse('leads:leads')
 
 def lead_create(request):
 
@@ -38,6 +65,15 @@ def lead_create(request):
     }
     return render(request, 'leads/lead_create.html', context)
 
+class LeadUpdateView(UpdateView):
+    template_name = 'leads/update_lead.html'
+    queryset = Lead.objects.all()
+    form_class = LeadModelForm
+
+    def get_success_url(self) -> str:
+        return reverse('leads:leads')
+
+
 # using ModelForm
 def lead_update(request, pk):
     lead = get_object_or_404(Lead, id=pk)
@@ -55,6 +91,13 @@ def lead_update(request, pk):
         "form": form
     }
     return render(request, "leads/update_lead.html", context)
+
+class LeadDeleteView(DeleteView):
+    template_name = 'leads/lead_delete.html'
+    queryset = Lead.objects.all()
+
+    def get_success_url(self) -> str:
+        return reverse('leads:leads')
 
 def delete_lead(request, pk):
     lead = get_object_or_404(Lead, id=pk)
