@@ -1,15 +1,22 @@
-from pipes import Template
+from django.core.mail import send_mail
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib import messages 
 from django.views.generic import (TemplateView, UpdateView, 
                                     CreateView ,ListView, DetailView, DeleteView)
 
 from .models import Lead, Agent
-from .forms import LeadForm, LeadModelForm
+from .forms import LeadForm, LeadModelForm, RegistrationForm
 
 
 # clas based views 
 #CRUD+L -> Create, Retrieve, Update, and Delete + List
+class RegistrationView(CreateView):
+    template_name = 'registration/signup.html'
+    form_class = RegistrationForm
+
+    def get_success_url(self) -> str:
+        return reverse('login')
 
 class IndexPageList(TemplateView):
     template_name = 'landing.html'
@@ -45,6 +52,17 @@ class LeadCreateView(CreateView):
 
     def get_success_url(self) -> str:
         return reverse('leads:leads')
+
+    def form_valid(self, form):
+        # send mail on lead creation
+
+        send_mail(
+            subject= " A lead has been created!",
+            message=" Visit the site to see the new lead",
+            from_email="lead@crmpro.com",
+            recipient_list=["nicholaskarimi.dev@gmail.com"]
+        )
+        return super(LeadCreateView, self).form_valid(form)
 
 def lead_create(request):
 

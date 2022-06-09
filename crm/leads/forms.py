@@ -1,8 +1,19 @@
-from pyexpat import model
+from dataclasses import fields
+from statistics import mode
+from django.contrib.auth.forms import UserCreationForm, UsernameField
+from django.contrib.auth import get_user_model
 from django import forms
 from .models import Lead
 
+
+User = get_user_model()
 #using the ModelForm
+
+class RegistrationForm(UserCreationForm):
+    class Meta:
+        model = User 
+        fields = ("first_name", "last_name", "username", "email",)
+        field_classes = {"username": UsernameField}
 class LeadModelForm(forms.ModelForm):
     class Meta:
         model = Lead
